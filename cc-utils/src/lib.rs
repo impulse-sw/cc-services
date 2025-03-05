@@ -8,6 +8,3 @@ pub mod results;
 pub mod tracing;
 
 pub mod prelude;
-
-#[cfg(feature = "salvo-test")]
-pub mod salvo_test;
