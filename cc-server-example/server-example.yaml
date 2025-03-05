@@ -1,0 +1,8 @@
+startup_type: http_localhost
+server_port: 8801
+allow_oapi_access: true
+oapi_frontend_type: Scalar
+oapi_name: Server Test OAPI
+oapi_ver: 0.0.1
+oapi_api_addr: /api
+log_level: debug

@@ -1,0 +1,252 @@
+{
+  "project_name": "cc-static-server",
+  "langs": [
+    "Rust"
+  ],
+  "targets": [
+    {
+      "arch": "x86_64",
+      "os": "Linux",
+      "derivative": "any",
+      "version": "No"
+    }
+  ],
+  "deploy_toolkit": null,
+  "cache_files": [
+    ".git",
+    "Cargo.lock",
+    "target"
+  ],
+  "pipelines": [
+    {
+      "title": "build",
+      "desc": "Got from `Build Static Server`.",
+      "info": "cc-static-server-build@0.1.0",
+      "tags": [],
+      "actions": [
+        {
+          "title": "Format",
+          "desc": "Format `.rs` files",
+          "info": "cargo-fmt@0.1.0",
+          "tags": [
+            "rust",
+            "cargo",
+            "fmt"
+          ],
+          "action": {
+            "PreBuild": {
+              "supported_langs": [
+                "Rust"
+              ],
+              "commands": [
+                {
+                  "bash_c": "cargo fmt",
+                  "ignore_fails": false,
+                  "show_success_output": false,
+                  "show_bash_c": true,
+                  "only_when_fresh": false
+                }
+              ]
+            }
+          },
+          "exec_in_project_dir": true
+        },
+        {
+          "title": "Build",
+          "desc": "Got from `Cargo Build (Release)`. Build the Rust project with Cargo default settings in release mode",
+          "info": "cargo-rel@0.1",
+          "tags": [
+            "rust",
+            "cargo"
+          ],
+          "action": {
+            "Build": {
+              "supported_langs": [
+                "Rust"
+              ],
+              "commands": [
+                {
+                  "bash_c": "cargo build --release",
+                  "ignore_fails": false,
+                  "show_success_output": false,
+                  "show_bash_c": true
+                }
+              ]
+            }
+          },
+          "requirements": [
+            {
+              "Exists": "/bin/cargo"
+            }
+          ]
+        }
+      ],
+      "default": true
+    },
+    {
+      "title": "content",
+      "desc": "Got from `Build Static Server`.",
+      "info": "cc-static-server-build-content@0.1.0",
+      "tags": [],
+      "actions": [
+        {
+          "title": "Cargo Fmt",
+          "desc": "Format `.rs` files",
+          "info": "cargo-fmt@0.1.0",
+          "tags": [
+            "rust",
+            "cargo",
+            "fmt"
+          ],
+          "action": {
+            "PreBuild": {
+              "supported_langs": [
+                "Rust"
+              ],
+              "commands": [
+                {
+                  "bash_c": "cargo fmt",
+                  "ignore_fails": false,
+                  "show_success_output": false,
+                  "show_bash_c": true,
+                  "only_when_fresh": false
+                }
+              ]
+            }
+          },
+          "exec_in_project_dir": true
+        },
+        {
+          "title": "Sync script to know Rust package version",
+          "desc": "",
+          "info": "sync-rust-crate-ver@0.1.0",
+          "tags": [],
+          "action": {
+            "UseFromStorage": "get-know-rust-package-version@latest"
+          },
+          "exec_in_project_dir": false
+        },
+        {
+          "title": "Build",
+          "desc": "Got from `Cargo Build (Release)`. Build the Rust project with Cargo default settings in release mode",
+          "info": "cargo-rel@0.1",
+          "tags": [
+            "rust",
+            "cargo"
+          ],
+          "action": {
+            "Build": {
+              "supported_langs": [
+                "Rust"
+              ],
+              "commands": [
+                {
+                  "bash_c": "cargo build --release",
+                  "ignore_fails": false,
+                  "show_success_output": false,
+                  "show_bash_c": true
+                }
+              ]
+            }
+          },
+          "requirements": [
+            {
+              "Exists": "/bin/cargo"
+            }
+          ]
+        },
+        {
+          "title": "UPX Compress",
+          "desc": "Compress the binary with UPX.",
+          "info": "upx-compress@0.1.0",
+          "tags": [
+            "upx"
+          ],
+          "action": {
+            "PostBuild": {
+              "supported_langs": [
+                "Rust",
+                "Go",
+                "C",
+                "Cpp"
+              ],
+              "commands": [
+                {
+                  "bash_c": "upx <af>",
+                  "placeholders": [
+                    "<af>"
+                  ],
+                  "replacements": [
+                    [
+                      [
+                        "<af>",
+                        {
+                          "title": "target/release/cc-static-server",
+                          "is_secret": false,
+                          "value": {
+                            "Plain": "target/release/cc-static-server"
+                          }
+                        }
+                      ]
+                    ]
+                  ],
+                  "ignore_fails": false,
+                  "show_success_output": false,
+                  "show_bash_c": true,
+                  "only_when_fresh": false
+                }
+              ]
+            }
+          },
+          "requirements": [
+            {
+              "ExistsAny": [
+                "~/.local/bin/upx",
+                "/usr/bin/upx"
+              ]
+            }
+          ],
+          "exec_in_project_dir": false
+        },
+        {
+          "title": "Auto-upload CC Static Server to Deployer's Storage",
+          "desc": "",
+          "info": "auto-upload-static-server@0.1.0",
+          "tags": [],
+          "action": {
+            "AddToStorage": {
+              "short_name": "static-server",
+              "auto_version_rule": {
+                "cmd_stdout": {
+                  "bash_c": "python .depl/rust-crate-ver.py",
+                  "ignore_fails": true,
+                  "show_success_output": true,
+                  "show_bash_c": false,
+                  "only_when_fresh": false
+                }
+              }
+            }
+          },
+          "exec_in_project_dir": false
+        }
+      ],
+      "default": false
+    }
+  ],
+  "artifacts": [
+    "target/release/cc-static-server",
+    "static-server.yaml"
+  ],
+  "variables": [],
+  "place_artifacts_into_project_root": [
+    [
+      "target/release/cc-static-server",
+      "cc-static-server"
+    ],
+    [
+      "static-server.yaml",
+      "static-server.yaml"
+    ]
+  ],
+  "version": 2
+}

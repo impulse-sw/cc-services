@@ -1,0 +1,16 @@
+[package]
+name = "cc-ui-kit"
+version = "0.1.0-alpha-10"
+edition = "2024"
+
+[dependencies]
+cc-utils = { git = "https://github.com/markcda/cc-utils.git", tag = "0.5.4", default-features = false }
+console_error_panic_hook = "0.1.7"
+console_log = "1"
+leptos = { version = "0.7", features = ["csr"] }
+leptos-use = { version = "0.15.5", default-features = false, features = ["use_color_mode"] }
+log = "0.4"
+lucide-leptos = "1.1"
+serde = { version = "1", features = ["derive"] }
+thaw = { version = "0.4.1", features = ["csr"] }
+web-sys = { version = "0.3", features = ["Storage", "Window", "Navigator"] }

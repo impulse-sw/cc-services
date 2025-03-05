@@ -1,0 +1,12 @@
+[package]
+name = "cc-server-example"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cc-server-kit = { path = "../cc-server-kit", default-features = false, features = ["oapi", "cc-utils"] }
+serde = { version = "1", features = ["derive"] }
+tokio = { version = "1", features = ["macros"] }
+
+[profile.release]
+opt-level = 2
