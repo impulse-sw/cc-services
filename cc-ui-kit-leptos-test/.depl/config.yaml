@@ -1,0 +1,369 @@
+project_name: cc-dioxus-testy
+version: 4
+langs:
+  - rust
+  - CSS
+targets:
+  - arch: wasm32
+    os: web
+    os_derivative: any
+    os_version:
+      type: no
+cache_files:
+  - .git
+  - Cargo.lock
+  - public/tailwind.css
+  - target
+artifacts:
+  - dist
+  - cc-static-server
+  - static-server.yaml
+variables:
+  - title: wasm-project-file
+    is_secret: false
+    value:
+      type: plain
+      value: dist/cc-ui-kit-leptos-test_bg.wasm
+place_artifacts_into_project_root:
+  - from: dist
+    to: dist
+  - from: cc-static-server
+    to: cc-static-server
+  - from: static-server.yaml
+    to: static-server.yaml
+pipelines:
+  - title: deploy
+    desc: Получено из `CC UI Kit Frontend App`. Run your `cc-ui-kit` app with Deployer
+    info: cc-ui-kit-frontend-app@0.1.0
+    tags:
+      - cargo
+      - dioxus
+      - trunk
+      - rust
+      - wasm
+      - web
+    default: true
+    actions:
+      - title: Leptos Fmt
+        desc: Format Leptos `.rs` files
+        info: leptos-fmt@0.1.0
+        tags:
+          - rust
+          - cargo
+          - fmt
+        requirements:
+          - type: exists
+            path: ~/.cargo/bin/leptosfmt
+        exec_in_project_dir: true
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: leptosfmt -t 2 ./**/*.rs
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Cargo Fmt
+        desc: Format `.rs` files
+        info: cargo-fmt@0.1.0
+        tags:
+          - rust
+          - cargo
+          - fmt
+        exec_in_project_dir: true
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo fmt
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Compile Tailwind Styles
+        desc: Получено из `Compile Tailwind Styles`. Compile application style classes with `tailwindcss` JS util.
+        info: tailwind-css@0.1.0
+        tags:
+          - rust
+          - css
+          - tailwind
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - CSS
+          commands:
+            - bash_c: tailwindcss -i ./input.css -o ./public/tailwind.css --minify
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Trunk Build
+        desc: Получено из `Trunk Build`. Build WASM application with `trunk` in release mode.
+        info: trunk-release@0.1.0
+        tags:
+          - cargo
+          - rust
+          - trunk
+          - wasm
+          - web
+        requirements:
+          - type: exists
+            path: ~/.cargo/bin/trunk
+        exec_in_project_dir: false
+        action:
+          type: build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: trunk build --release
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Optimize WASM
+        desc: Run `wasm-opt` with `-Oz` argument inside `dist` folder
+        info: wasm-opt@0.1.0
+        tags:
+          - wasm
+          - wasm-opt
+        requirements:
+          - type: exists
+            path: /bin/wasm-opt
+        exec_in_project_dir: false
+        action:
+          type: post_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: wasm-opt -Oz -o {file} {file}
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+              placeholders:
+                - "{file}"
+              replacements:
+                - group:
+                    - from: "{file}"
+                      to:
+                        title: wasm-project-file
+                        is_secret: false
+                        value:
+                          type: plain
+                          value: dist/cc-ui-kit-leptos-test_bg.wasm
+      - title: Add `tailwind.css` from `public` to `dist`
+        desc: ""
+        info: add-tailwind-css-to-dist-folder@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: post_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cp public/tailwind.css dist/
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Add `favicon.ico` from `public` to `dist`
+        desc: ""
+        info: add-favicon-to-dist-folder@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: post_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cp public/favicon.ico dist/
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Sync CC Static Server
+        desc: ""
+        info: sync-cc-static-server@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: use_from_storage
+          content_info: static-server@latest
+      - title: Run `cc-static-server`
+        desc: ""
+        info: run-static-server@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: observe
+          command:
+            bash_c: ./cc-static-server
+            ignore_fails: true
+            show_success_output: true
+            show_bash_c: false
+            only_when_fresh: false
+  - title: build
+    desc: Получено из `CC UI Kit Frontend App`. Run your `cc-ui-kit` app with Deployer
+    info: cc-ui-kit-frontend-app@0.1.0
+    tags:
+      - cargo
+      - dioxus
+      - trunk
+      - rust
+      - wasm
+      - web
+    default: false
+    actions:
+      - title: Leptos Fmt
+        desc: Format Leptos `.rs` files
+        info: leptos-fmt@0.1.0
+        tags:
+          - rust
+          - cargo
+          - fmt
+        requirements:
+          - type: exists
+            path: ~/.cargo/bin/leptosfmt
+        exec_in_project_dir: true
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: leptosfmt -t 2 ./**/*.rs
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Cargo Fmt
+        desc: Format `.rs` files
+        info: cargo-fmt@0.1.0
+        tags:
+          - rust
+          - cargo
+          - fmt
+        exec_in_project_dir: true
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo fmt
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Compile Tailwind Styles
+        desc: Получено из `Compile Tailwind Styles`. Compile application style classes with `tailwindcss` JS util.
+        info: tailwind-css@0.1.0
+        tags:
+          - rust
+          - css
+          - tailwind
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - CSS
+          commands:
+            - bash_c: tailwindcss -i ./input.css -o ./public/tailwind.css --minify
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Trunk Build
+        desc: Получено из `Trunk Build`. Build WASM application with `trunk` in release mode.
+        info: trunk-release@0.1.0
+        tags:
+          - cargo
+          - rust
+          - trunk
+          - wasm
+          - web
+        requirements:
+          - type: exists
+            path: ~/.cargo/bin/trunk
+        exec_in_project_dir: false
+        action:
+          type: build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: trunk build --release
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Optimize WASM
+        desc: Run `wasm-opt` with `-Oz` argument inside `dist` folder
+        info: wasm-opt@0.1.0
+        tags:
+          - wasm
+          - wasm-opt
+        requirements:
+          - type: exists
+            path: /bin/wasm-opt
+        exec_in_project_dir: false
+        action:
+          type: post_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: wasm-opt -Oz -o {file} {file}
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+              placeholders:
+                - "{file}"
+              replacements:
+                - group:
+                    - from: "{file}"
+                      to:
+                        title: wasm-project-file
+                        is_secret: false
+                        value:
+                          type: plain
+                          value: dist/cc-ui-kit-leptos-test_bg.wasm
+      - title: Add `tailwind.css` from `public` to `dist`
+        desc: ""
+        info: add-tailwind-css-to-dist-folder@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: post_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cp public/tailwind.css dist/
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Add `favicon.ico` from `public` to `dist`
+        desc: ""
+        info: add-favicon-to-dist-folder@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: post_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cp public/favicon.ico dist/
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Sync CC Static Server
+        desc: ""
+        info: sync-cc-static-server@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: use_from_storage
+          content_info: static-server@latest

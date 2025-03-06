@@ -1,16 +1,19 @@
 [package]
 name = "cc-ui-kit"
+description = "Powerful frontend framework based on Thaw & Leptos"
 version = "0.1.0-alpha-10"
 edition = "2024"
+license = "MIT"
+authors = ["Klimenty Titov <aclo.create@gmail.com>"]
 
 [dependencies]
-cc-utils = { git = "https://github.com/markcda/cc-utils.git", tag = "0.5.4", default-features = false }
-console_error_panic_hook = "0.1.7"
-console_log = "1"
-leptos = { version = "0.7", features = ["csr"] }
-leptos-use = { version = "0.15.5", default-features = false, features = ["use_color_mode"] }
-log = "0.4"
-lucide-leptos = "1.1"
-serde = { version = "1", features = ["derive"] }
-thaw = { version = "0.4.1", features = ["csr"] }
-web-sys = { version = "0.3", features = ["Storage", "Window", "Navigator"] }
+cc-utils = { workspace = true }
+console_error_panic_hook = { workspace = true }
+console_log = { workspace = true }
+leptos = { workspace = true, features = ["csr"] }
+leptos-use = { workspace = true, features = ["use_color_mode"] }
+log = { workspace = true }
+lucide-leptos = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+thaw = { workspace = true, features = ["csr"] }
+web-sys = { workspace = true, features = ["Storage", "Window", "Navigator"] }

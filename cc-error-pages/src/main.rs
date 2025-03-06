@@ -1,3 +1,5 @@
+#![deny(warnings, clippy::todo, clippy::unimplemented)]
+
 use cc_ui_kit::{
   prelude::*,
   router::{get_path, redirect},
@@ -92,7 +94,7 @@ fn App() -> impl IntoView {
             .into_any()
         }
         _ => {
-          redirect("/oops".to_string());
+          redirect("/oops".to_string()).unwrap();
           view! {}.into_any()
         }
       }}
@@ -102,8 +104,6 @@ fn App() -> impl IntoView {
 
 #[component]
 fn ErrorPage(err_num: String, err_msg: String) -> impl IntoView {
-  let i18n = use_i18n();
-
   view! {
     <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <h1 style="font-size: 72pt;" class="mb-10 text-gray-800 dark:text-gray-200 font-bold">
@@ -119,6 +119,7 @@ fn get_referrer() -> String {
   web_sys::window().unwrap().document().unwrap().referrer()
 }
 
+#[cfg(not(debug_assertions))]
 fn get_go_back_path() -> String {
   let search = web_sys::window().unwrap().location().search().unwrap();
   let params = web_sys::UrlSearchParams::new_with_str(&search).unwrap();
@@ -131,6 +132,8 @@ fn GoBack() -> impl IntoView {
   let i18n = use_i18n();
   let ref_is_empty = get_referrer().is_empty();
   let go_back = move || redirect(get_referrer()).unwrap();
+  
+  #[cfg(not(debug_assertions))]
   let go_back_through_query = move || redirect(get_go_back_path()).unwrap();
 
   #[cfg(not(debug_assertions))]

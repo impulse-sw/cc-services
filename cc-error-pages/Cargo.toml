@@ -1,26 +1,20 @@
 [package]
 name = "cc-error-pages"
+description = "Error pages for standard CC Server Kit errors"
 version = "0.1.1"
 edition = "2024"
+license = "MIT"
 authors = ["Klimenty Titov <aclo.create@gmail.com>"]
 
 [dependencies]
-cc-utils = { git = "https://github.com/markcda/cc-utils.git", tag = "0.5.4", default-features = false, features = ["reqwest"] }
-cc-ui-kit = { git = "https://github.com/markcda/cc-ui-kit.git", tag = "0.1.0-alpha-10" }
-leptos = { version = "0.7", features = ["csr"] }
-leptos_i18n = { version = "0.5", features = ["csr"] }
-leptos_meta = "0.7"
-web-sys = { version = "0.3", features = ["Document", "Location"] }
-
-[profile.release]
-opt-level = "z"
-debug = false
-lto = true
-codegen-units = 1
-panic = "abort"
-strip = true
-incremental = false
+cc-utils = { workspace = true, features = ["reqwest"] }
+cc-ui-kit = { workspace = true }
+leptos = { workspace = true, features = ["csr"] }
+leptos_i18n = { workspace = true, features = ["csr", "json_files"] }
+leptos_meta = { workspace = true }
+web-sys = { workspace = true, features = ["Document", "Location"] }
 
 [package.metadata.leptos-i18n]
 default = "en"
 locales = ["en", "ru"]
+locales-dir = "./locales"

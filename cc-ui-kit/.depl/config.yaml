@@ -1,0 +1,82 @@
+project_name: cc-ui-kit
+version: 4
+langs:
+  - rust
+  - css
+targets:
+  - arch: wasm32
+    os: web
+    os_derivative: any
+    os_version:
+      type: no
+cache_files:
+  - .git
+  - Cargo.lock
+  - target
+artifacts: []
+variables: []
+place_artifacts_into_project_root: []
+pipelines:
+  - title: build
+    desc: Got from `CC UI Kit Default Pipeline`.
+    info: cc-ui-kit-default@0.1.0
+    tags:
+      - rust
+      - cargo
+      - dioxus
+    default: true
+    actions:
+      - title: Leptos Fmt
+        desc: Format Leptos `.rs` files
+        info: leptos-fmt@0.1.0
+        tags:
+          - rust
+          - cargo
+          - fmt
+        requirements:
+          - type: exists
+            path: ~/.cargo/bin/leptosfmt
+        exec_in_project_dir: true
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: leptosfmt -t 2 ./**/*.rs
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Cargo Fmt
+        desc: Format `.rs` files
+        info: cargo-fmt@0.1.0
+        tags:
+          - rust
+          - cargo
+          - fmt
+        exec_in_project_dir: true
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo fmt
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint
+        desc: Got from `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo clippy
+              ignore_fails: false
+              show_success_output: true
+              show_bash_c: true
