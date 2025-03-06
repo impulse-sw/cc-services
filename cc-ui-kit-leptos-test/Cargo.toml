@@ -8,9 +8,8 @@ authors = ["Klimenty Titov <aclo.create@gmail.com>"]
 
 [dependencies]
 cc-ui-kit = { workspace = true }
-icondata = { workspace = true }
+icondata = { workspace = true, features = ["ant-design-icons"] }
 leptos = { workspace = true, features = ["csr"] }
-leptos_router = { workspace = true }
 lucide-leptos = { workspace = true }
 palette = { workspace = true }
 thaw = { workspace = true, features = ["csr"] }

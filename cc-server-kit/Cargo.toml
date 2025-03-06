@@ -1,7 +1,7 @@
 [package]
 name = "cc-server-kit"
 description = "Highly configurable backend framework based on `salvo`"
-version = "0.3.5"
+version = "0.3.6"
 edition = "2024"
 license = "MIT"
 authors = ["Klimenty Titov <aclo.create@gmail.com>"]
@@ -61,11 +61,11 @@ http-body-util = { optional = true, workspace = true }
 mime = { optional = true, workspace = true }
 notify = { workspace = true }
 opentelemetry = { optional = true, workspace = true }
-opentelemetry-otlp = { optional = true, workspace = true, features = ["tonic"] }
+opentelemetry-otlp = { optional = true, workspace = true, features = ["tonic", "trace", "http-proto", "grpc-tonic"] }
 opentelemetry_sdk = { optional = true, workspace = true, features = ["rt-tokio"] }
 reqwest = { optional = true, workspace = true, features = ["json", "rustls-tls"] }
 rmp-serde = { optional = true, workspace = true }
-salvo = { workspace = true, features = ["affix-state", "compression", "rustls", "cookie"] }
+salvo = { workspace = true, features = ["affix-state", "compression", "rustls", "cookie", "server", "http1", "http2", "server-handle"] }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { optional = true, workspace = true }
 serde_yaml = { workspace = true }

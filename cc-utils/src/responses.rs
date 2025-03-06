@@ -1,5 +1,9 @@
 //! Implementation of utilities for working with responses in `salvo` and `reqwest`.
 
+#[cfg(not(all(
+  any(target_arch = "wasm32", target_arch = "wasm64"),
+  not(any(feature = "salvo", feature = "reqwest"))
+)))]
 use crate::prelude::*;
 
 #[cfg(feature = "salvo")]

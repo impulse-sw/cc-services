@@ -1,13 +1,10 @@
+#![deny(warnings, clippy::todo, clippy::unimplemented)]
+
 use cc_ui_kit::prelude::*;
-use leptos_router::components::Router;
-use log::info;
 use lucide_leptos::{ArrowRightFromLine, File};
 
 fn main() {
-  setup_app(
-    log::Level::Info,
-    Box::new(move || view! { <App /> }.into_any()),
-  )
+  setup_app(log::Level::Info, Box::new(move || view! { <App /> }.into_any()))
 }
 
 #[component]
@@ -17,10 +14,7 @@ fn App() -> impl IntoView {
   let value = RwSignal::new(String::new());
   let fvalue = RwSignal::new(0.0);
   let options = Memo::<Vec<_>>::new(move |_| {
-    let prefix = value
-      .get()
-      .split_once('@')
-      .map_or(value.get(), |v| v.0.to_string());
+    let prefix = value.get().split_once('@').map_or(value.get(), |v| v.0.to_string());
     vec!["@gmail.com", "@163.com"]
       .into_iter()
       .map(|suffix| (format!("{prefix}{suffix}"), format!("{prefix}{suffix}")))

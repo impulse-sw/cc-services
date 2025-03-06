@@ -1,0 +1,294 @@
+project_name: cc-monorepo
+version: 4
+langs:
+  - rust
+targets:
+  - arch: x86_64
+    os: linux
+    os_derivative: any
+    os_version:
+      type: no
+  - arch: wasm32
+    os: web
+    os_derivative: any
+    os_version:
+      type: no
+deploy_toolkit: docker
+cache_files:
+  - .git
+  - Cargo.lock
+  - target
+artifacts:
+  - target/x86_64-unknown-linux-gnu/release/cc-static-server
+  - cc-static-server/static-server.yaml
+variables: []
+place_artifacts_into_project_root:
+  - from: target/x86_64-unknown-linux-gnu/release/cc-static-server
+    to: static-server/cc-static-server
+  - from: cc-static-server/static-server.yaml
+    to: static-server/static-server.yaml
+pipelines:
+  - title: common-ops
+    desc: Common monorepo operations
+    info: common-ops@0.1.0
+    tags:
+      - cargo
+      - clippy
+      - lint
+    default: true
+    actions:
+      - title: Lint `cc-utils` on x86-64
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: RUSTFLAGS='--cfg reqwest_unstable' cargo clippy --package cc-utils --target x86_64-unknown-linux-gnu
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint `cc-utils` on wasm32
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: RUSTFLAGS='--cfg reqwest_unstable' cargo clippy --package cc-utils --target wasm32-unknown-unknown --no-default-features --features=reqwest
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint `cc-auth` on x86-64
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo clippy --package cc-auth --target x86_64-unknown-linux-gnu
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint `cc-auth` on wasm32
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo clippy --package cc-auth --target wasm32-unknown-unknown
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint `cc-ui-kit`
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo clippy --package cc-ui-kit --target wasm32-unknown-unknown
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint `cc-ui-kit-leptos-test`
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo clippy --package cc-ui-kit-leptos-test --target wasm32-unknown-unknown
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint `cc-error-pages`
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo clippy --package cc-error-pages --target wasm32-unknown-unknown
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint `cc-server-kit`
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: RUSTFLAGS='--cfg reqwest_unstable' cargo clippy --package cc-server-kit --target x86_64-unknown-linux-gnu
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Lint `cc-static-server`
+        desc: Получено из `Cargo Clippy`.
+        info: cargo-clippy@0.1.0
+        tags:
+          - cargo
+          - clippy
+        exec_in_project_dir: false
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo clippy --package cc-static-server --target x86_64-unknown-linux-gnu
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Format
+        desc: Получено из `Format `.rs` files`.
+        info: cargo-fmt@0.1.0
+        tags: []
+        exec_in_project_dir: true
+        action:
+          type: pre_build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo fmt -- --config tab_spaces=2,max_width=120 */**/*.rs
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+  - title: build-static-server
+    desc: Build `cc-static-server` and update content storage
+    info: common-ops@0.1.0
+    tags:
+      - cargo
+      - clippy
+      - lint
+    default: true
+    actions:
+      - title: Sync script to know Rust package version
+        desc: ""
+        info: sync-rust-crate-ver@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: use_from_storage
+          content_info: get-know-rust-package-version@latest
+      - title: Cargo Build (Release)
+        desc: Build the Rust project with Cargo default settings in release mode
+        info: cargo-rel@0.1
+        tags:
+          - rust
+          - cargo
+        requirements:
+          - type: exists
+            path: /bin/cargo
+        action:
+          type: build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo build --release --package cc-static-server --target x86_64-unknown-linux-gnu
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+      - title: UPX Compress
+        desc: Compress the binary with UPX.
+        info: upx-compress@0.1.0
+        tags:
+          - upx
+        requirements:
+          - type: exists_any
+            paths:
+              - /usr/bin/upx
+              - ~/.local/bin/upx
+        exec_in_project_dir: false
+        action:
+          type: post_build
+          supported_langs:
+            - rust
+            - go
+            - c
+            - cpp
+          commands:
+            - bash_c: upx <af>
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+              daemon: false
+              placeholders:
+                - <af>
+              replacements:
+                - group:
+                    - from: <af>
+                      to:
+                        title: target/x86_64-unknown-linux-gnu/release/cc-static-server
+                        is_secret: false
+                        value:
+                          type: plain
+                          value: target/x86_64-unknown-linux-gnu/release/cc-static-server
+      - title: Auto-upload CC Static Server to Deployer's Storage
+        desc: ""
+        info: auto-upload-static-server@0.1.0
+        tags: []
+        exec_in_project_dir: false
+        action:
+          type: add_to_storage
+          short_name: static-server
+          auto_version_rule:
+            type: cmd_stdout
+            cmd:
+              bash_c: python .depl/rust-crate-ver.py cc-static-server/Cargo.toml
+              ignore_fails: true
+              show_success_output: true
+              show_bash_c: false
+              only_when_fresh: false

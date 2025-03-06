@@ -16,7 +16,7 @@ pub async fn get_filepath_from_dist(filename: impl Into<String>) -> MResult<Stri
   } else {
     tracing::debug!("There is no such file as {:?}", filepath);
   }
-  let mut filepath = PathBuf::from(std::env::current_exe()?);
+  let mut filepath = std::env::current_exe()?;
   filepath.pop();
   let filepath = filepath.join(LOCAL_FRONTEND_DISTRIBUTABLE).join(&filename);
   if tokio::fs::try_exists(&filepath).await.is_ok_and(|v| v) {
@@ -58,7 +58,7 @@ pub async fn get_uikit_app_internals(req: &Request) -> MResult<AnyOf> {
       }
       match frontend::frontend(req).await {
         Ok(html) => Ok(AnyOf::Html(html)),
-        Err(e) => Err(ErrorResponse::from(e).with_404_pub().build()),
+        Err(mut e) => Err(e.with_404_pub().build()),
       }
     }
   }

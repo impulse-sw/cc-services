@@ -95,7 +95,7 @@ fn App() -> impl IntoView {
         }
         _ => {
           redirect("/oops".to_string()).unwrap();
-          view! {}.into_any()
+          ().into_any()
         }
       }}
     </main>
@@ -132,7 +132,7 @@ fn GoBack() -> impl IntoView {
   let i18n = use_i18n();
   let ref_is_empty = get_referrer().is_empty();
   let go_back = move || redirect(get_referrer()).unwrap();
-  
+
   #[cfg(not(debug_assertions))]
   let go_back_through_query = move || redirect(get_go_back_path()).unwrap();
 
