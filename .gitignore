@@ -2,3 +2,4 @@
 **/.directory
 **/artifacts/
 **/Cargo.lock
+**/dist/
