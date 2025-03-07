@@ -292,3 +292,10 @@ pipelines:
               show_success_output: true
               show_bash_c: false
               only_when_fresh: false
+          content:
+            type: fixed_files
+            placements:
+              - from: target/x86_64-unknown-linux-gnu/release/cc-static-server
+                to: cc-static-server
+              - from: cc-static-server/static-server.yaml
+                to: static-server.yaml
