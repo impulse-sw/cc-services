@@ -297,7 +297,7 @@ pipelines:
           auto_version_rule:
             type: cmd_stdout
             cmd:
-              bash_c: python .depl/rust-crate-ver.py cc-static-server/Cargo.toml
+              bash_c: python .depl/rust-crate-ver.py
               ignore_fails: true
               show_success_output: true
               show_bash_c: false
@@ -533,7 +533,7 @@ pipelines:
         action:
           type: pre_build
           supported_langs:
-            - CSS
+            - css
           commands:
             - bash_c: cd cc-ui-kit-leptos-test && tailwindcss -i ./input.css -o ./public/tailwind.css --minify
               ignore_fails: false

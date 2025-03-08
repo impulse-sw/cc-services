@@ -1,10 +1,10 @@
 [package]
 name = "cc-auth"
 description = "Simple backend authorization system"
-version = "0.3.2"
-edition = "2024"
-license = "MIT"
-authors = ["Klimenty Titov <aclo.create@gmail.com>"]
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
 
 [dependencies]
 chrono = { workspace = true, features = ["serde"] }

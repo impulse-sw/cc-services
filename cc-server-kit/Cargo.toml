@@ -1,10 +1,10 @@
 [package]
 name = "cc-server-kit"
 description = "Highly configurable backend framework based on `salvo`"
-version = "0.3.6"
-edition = "2024"
-license = "MIT"
-authors = ["Klimenty Titov <aclo.create@gmail.com>"]
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
 
 [features]
 default = ["http3", "cors", "acme", "oapi", "cc-utils", "otel", "force-https"]

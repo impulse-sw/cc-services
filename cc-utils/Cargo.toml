@@ -1,10 +1,10 @@
 [package]
 name = "cc-utils"
 description = "Rust Fullstack utils (strict error handling, `Consider` trait, MessagePack support, etc.) for Salvo and Yew/Dioxus/Leptos/*"
-version = "0.5.7"
-edition = "2024"
-license = "MIT"
-authors = ["Klimenty Titov <aclo.create@gmail.com>"]
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
 
 [features]
 default = ["salvo", "reqwest"]

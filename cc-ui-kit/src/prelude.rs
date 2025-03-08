@@ -4,7 +4,6 @@ pub use console_error_panic_hook;
 pub use console_log;
 pub use log;
 
-pub use lucide_leptos;
 pub use thaw::*;
 
 pub fn setup_app(#[allow(unused_variables)] log_level: log::Level, children: Children) {
