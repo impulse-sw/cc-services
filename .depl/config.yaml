@@ -23,6 +23,8 @@ artifacts:
   - cc-static-server/static-server.yaml
   - cc-ui-kit-leptos-test/dist
   - cc-ui-kit-leptos-test/static-server.yaml
+  - target/x86_64-unknown-linux-gnu/doc
+  - target/wasm32-unknown-unknown/doc
 variables: []
 place_artifacts_into_project_root:
   - from: target/x86_64-unknown-linux-gnu/release/cc-static-server
@@ -37,6 +39,10 @@ place_artifacts_into_project_root:
     to: cc-ui-kit-leptos-test/static-server.yaml
   - from: cc-error-pages/dist
     to: cc-error-pages/dist
+  - from: target/x86_64-unknown-linux-gnu/doc
+    to: docs/x86-64
+  - from: target/wasm32-unknown-unknown/doc
+    to: docs/wasm32
 pipelines:
   - title: common-ops
     desc: Common monorepo operations
@@ -211,6 +217,40 @@ pipelines:
             - rust
           commands:
             - bash_c: cargo fmt -- --config tab_spaces=2,max_width=120 */**/*.rs
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Generate `x86-64` docs
+        desc: ''
+        info: cargo-doc@0.1.0
+        tags:
+          - cargo
+          - doc
+        exec_in_project_dir: false
+        action:
+          type: build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo doc --target x86_64-unknown-linux-gnu --workspace --exclude cc-ui-kit --exclude cc-ui-kit-leptos-test --exclude cc-error-pages --no-deps
+              ignore_fails: false
+              show_success_output: false
+              show_bash_c: true
+              only_when_fresh: false
+      - title: Generate `wasm32` docs
+        desc: ''
+        info: cargo-doc@0.1.0
+        tags:
+          - cargo
+          - doc
+        exec_in_project_dir: false
+        action:
+          type: build
+          supported_langs:
+            - rust
+          commands:
+            - bash_c: cargo doc --target wasm32-unknown-unknown --workspace --exclude cc-server-kit --exclude cc-static-server --no-deps
               ignore_fails: false
               show_success_output: false
               show_bash_c: true
@@ -779,7 +819,7 @@ pipelines:
           supported_langs:
             - rust
           commands:
-            - bash_c: cp cc-error-pages/public/tailwind.css cc-error-pages/dist/
+            - bash_c: cp cc-error-pages/public/tailwind.css cc-error-pages/dist/error_pages_tailwind.css
               ignore_fails: false
               show_success_output: false
               show_bash_c: true

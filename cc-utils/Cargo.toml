@@ -15,7 +15,9 @@ reqwest = ["dep:reqwest"]
 anyhow = { workspace = true }
 reqwest = { workspace = true, features = ["json", "rustls-tls"], optional = true }
 rmp-serde = { workspace = true }
-salvo = { workspace = true, features = ["oapi", "rustls"], optional = true }
 serde = { version = "1", features = ["derive"] }
 serde_json = { workspace = true }
 tracing = { workspace = true }
+
+[target.'cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))'.dependencies]
+salvo = { workspace = true, features = ["oapi", "rustls"], optional = true }
