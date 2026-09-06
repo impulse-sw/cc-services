@@ -323,11 +323,7 @@ pub fn lang_id(name: &str) -> LangId {
     registry
       .langs
       .iter()
-      .position(|slot| {
-        slot
-          .as_ref()
-          .is_some_and(|def| def.aliases.iter().any(|alias| *alias == name))
-      })
+      .position(|slot| slot.as_ref().is_some_and(|def| def.aliases.contains(&name)))
       .map(|index| LangId(index as u16))
       .unwrap_or(LangId::NONE)
   })
