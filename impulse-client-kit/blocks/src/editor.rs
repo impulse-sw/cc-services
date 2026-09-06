@@ -2384,7 +2384,11 @@ fn typx_scan(line: &str, block: Block, mut out: Option<&mut Vec<HighlightSpan>>)
   // A comment carried in from the line above runs until it closes — and it may
   // close into another one, which is why the depth is counted rather than
   // flagged.
-  let carried = if block.kind == IN_COMMENT { usize::from(block.len) } else { 0 };
+  let carried = if block.kind == IN_COMMENT {
+    usize::from(block.len)
+  } else {
+    0
+  };
   if carried > 0 {
     let (at, left) = comment_run(line, 0, carried);
     push(0, at, Token::Comment.class());
@@ -2499,7 +2503,9 @@ fn typx_scan(line: &str, block: Block, mut out: Option<&mut Vec<HighlightSpan>>)
     // itself.
     if rest.starts_with('<')
       && let Some(close) = rest.find('>')
-      && rest[1..close].chars().all(|ch| ch.is_alphanumeric() || ch == '_' || ch == '-' || ch == ':')
+      && rest[1..close]
+        .chars()
+        .all(|ch| ch.is_alphanumeric() || ch == '_' || ch == '-' || ch == ':')
     {
       push(i, i + close + 1, LINK);
       i += close + 1;
@@ -2632,7 +2638,11 @@ mod tests {
     assert_eq!(lines[1][0].0, "-");
     assert_eq!(lines[2][0].0, "#let");
     assert_eq!(lines[2][0].1, Token::Keyword.class());
-    assert!(lines[2].iter().any(|(text, class)| text == "2" && *class == Token::Number.class()));
+    assert!(
+      lines[2]
+        .iter()
+        .any(|(text, class)| text == "2" && *class == Token::Number.class())
+    );
   }
 
   #[test]
@@ -2665,7 +2675,10 @@ mod tests {
           for span in (syntax.paint)(line, block) {
             assert!(span.from >= at, "{line}: spans out of order");
             assert!(span.to <= line.len(), "{line}: span past the end");
-            assert!(line.is_char_boundary(span.from) && line.is_char_boundary(span.to), "{line}: mid-character");
+            assert!(
+              line.is_char_boundary(span.from) && line.is_char_boundary(span.to),
+              "{line}: mid-character"
+            );
             at = span.to;
           }
           block = (syntax.advance)(line, block);
@@ -2674,4 +2687,3 @@ mod tests {
     }
   }
 }
-
