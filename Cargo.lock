@@ -859,7 +859,7 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "client-kit-showcase"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "chrono",
  "codee",
@@ -1156,27 +1156,27 @@ checksum = "790eea4361631c5e7d22598ecd5723ff611904e3344ce8720784c93e3d83d40b"
 
 [[package]]
 name = "crossbeam-channel"
-version = "0.5.16"
+version = "0.5.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d85363c37faeca707aef026efa9f3b34d077bce547e48f770770625c6013679e"
+checksum = "98b0cc327b5bc766e7fda9c9260cc0fa81b43a8e240440422dff70788e3f9ef1"
 dependencies = [
  "crossbeam-utils",
 ]
 
 [[package]]
 name = "crossbeam-epoch"
-version = "0.9.20"
+version = "0.9.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d6914041f254d6e9176c01941b21115dcfb7089e55135a35411081bd106ef3f"
+checksum = "dc74980687109a3b14c72fd458107bf0baa1da1a1a805e178d15501ba9b86d9d"
 dependencies = [
  "crossbeam-utils",
 ]
 
 [[package]]
 name = "crossbeam-utils"
-version = "0.8.22"
+version = "0.8.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61803da095bee82a81bb1a452ecc25d3b2f1416d1897eb86430c6159ef717c17"
+checksum = "a31eee39dddec8330830986fcd7625edb5a24ec90ea038215273bbc3adb08ac6"
 
 [[package]]
 name = "crunchy"
@@ -1322,9 +1322,9 @@ dependencies = [
 
 [[package]]
 name = "der"
-version = "0.8.1"
+version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a69dedd701da44b0536442edf09c81a64b0ab97a7a4a5e3d1971f00027cbc63d"
+checksum = "a878c850e9e421b20262e9b41f9c860e4785fa07541c266b62ff9d1ef998a80a"
 dependencies = [
  "const-oid 0.10.2",
  "pem-rfc7468 1.0.0",
@@ -1418,7 +1418,7 @@ version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c0681a4fc24c767085329728d8dfba959af91228aa4610cca4f8ce317ba46ae0"
 dependencies = [
- "der 0.8.1",
+ "der 0.8.2",
  "digest 0.11.3",
  "elliptic-curve",
  "rfc6979",
@@ -2398,7 +2398,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-client-kit"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "console_error_panic_hook",
  "console_log",
@@ -2423,7 +2423,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-client-kit-blocks"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "gloo-net",
  "impulse-client-kit",
@@ -2438,7 +2438,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-client-kit-components"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "chrono",
  "codee",
@@ -2454,7 +2454,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-client-native-themes"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "jni 0.21.1",
  "js-sys",
@@ -2468,7 +2468,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-client-ring"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "bytes",
  "clap",
@@ -2488,7 +2488,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-client-store"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "leptos",
  "log",
@@ -2500,7 +2500,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-endpoint"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "impulse-utils",
  "reqwest",
@@ -2512,7 +2512,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-error-pages"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "icondata",
  "impulse-client-kit",
@@ -2561,7 +2561,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-server-kit"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "any_spawner",
  "axum",
@@ -2613,7 +2613,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-skdsl"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "clap",
  "impulse-server-kit",
@@ -2629,7 +2629,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-static-server"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "impulse-server-kit",
  "serde",
@@ -2638,11 +2638,11 @@ dependencies = [
 
 [[package]]
 name = "impulse-tailwind-sources"
-version = "1.8.11"
+version = "1.8.12"
 
 [[package]]
 name = "impulse-tauri-engine"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "futures-util",
  "impulse-endpoint",
@@ -2659,7 +2659,7 @@ dependencies = [
 
 [[package]]
 name = "impulse-utils"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "anyhow",
  "http",
@@ -2753,9 +2753,9 @@ dependencies = [
 
 [[package]]
 name = "ipnet"
-version = "2.12.1"
+version = "2.12.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a756c3fac73139e83f14c2d742155dd2b78d3ee56597b419a0579b7bdd6dd78"
+checksum = "791930b43c0d5973160d90a8f3894509f2b273430f5c5c73b668636d0287c5c0"
 dependencies = [
  "serde",
 ]
@@ -3166,9 +3166,9 @@ checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
 
 [[package]]
 name = "libflate"
-version = "2.3.1"
+version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4da9b700e758e57152a1fd1c52cbdc5727c1aa6d8743dc1acda917398f1d76c"
+checksum = "561a8da1a50e1428d3c51321dafeca849df992a5bb67720c386131234caba82e"
 dependencies = [
  "adler32",
  "crc32fast",
@@ -3887,7 +3887,7 @@ version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "451913da69c775a56034ea8d9003d27ee8948e12443eae7c038ba100a4f21cb7"
 dependencies = [
- "der 0.8.1",
+ "der 0.8.2",
  "spki 0.8.0",
 ]
 
@@ -5263,7 +5263,7 @@ checksum = "d56d437c2f19203ce5f7122e507831de96f3d2d4d3be5af44a0b0a09d8a80e4d"
 dependencies = [
  "base16ct",
  "ctutils",
- "der 0.8.1",
+ "der 0.8.2",
  "hybrid-array",
  "subtle",
  "zeroize",
@@ -5749,12 +5749,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d9efca8738c78ee9484207732f728b1ef517bbb1833d6fc0879ca898a522f6f"
 dependencies = [
  "base64ct",
- "der 0.8.1",
+ "der 0.8.2",
 ]
 
 [[package]]
 name = "ssr-showcase"
-version = "1.8.11"
+version = "1.8.12"
 dependencies = [
  "console_error_panic_hook",
  "impulse-client-kit",

@@ -22,7 +22,7 @@ members = [
 resolver = "3"
 
 [workspace.package]
-version = "1.8.11"
+version = "1.8.12"
 edition = "2024"
 rust-version = "1.96"
 license = "MIT"
@@ -30,24 +30,18 @@ authors = ["Klimenty Titov <titoffklim@verbalautomation.tech>"]
 
 [workspace.dependencies]
 impulse-server-kit = { path = "impulse-server-kit", default-features = false }
-impulse-skdsl = { path = "impulse-server-kit-dsl" }
-impulse-static-server = { path = "impulse-static-server" }
 impulse-utils = { path = "impulse-utils", default-features = false }
 impulse-endpoint = { path = "impulse-endpoint", default-features = false }
-impulse-tauri-engine = { path = "impulse-tauri-engine", default-features = false }
 impulse-client-kit = { path = "impulse-client-kit", default-features = false }
 impulse-client-kit-components = { path = "impulse-client-kit/components", default-features = false }
-impulse-client-native-themes = { path = "impulse-client-kit/native-themes" }
 impulse-client-kit-blocks = { path = "impulse-client-kit/blocks", default-features = false }
 impulse-tailwind-sources = { path = "impulse-client-kit/tailwind-sources" }
 impulse-client-ring = { path = "impulse-client-ring", default-features = false }
-impulse-client-store = { path = "impulse-client-store", default-features = false }
 
 impulse-ring-connector = { git = "https://github.com/impulse-sw/impulse-ring.git", tag = "0.8.0" }
 impulse-ring-http = { git = "https://github.com/impulse-sw/impulse-ring.git", tag = "0.8.0" }
 
 anyhow = "1"
-apache-avro = "0.17"
 brotli = { version = "7", default-features = false }
 bytes = "1"
 clap = { version = "4", features = ["derive"] }
