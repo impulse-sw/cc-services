@@ -43,12 +43,10 @@ pub fn Select(
 ) -> impl IntoView {
   let is_open = open.unwrap_or_else(|| RwSignal::new(false));
   let selected_value = value.unwrap_or_else(|| RwSignal::new(default_value.unwrap_or_default()));
-  let selected_label = RwSignal::new(String::new());
 
   provide_context(SelectContext {
     is_open,
     selected_value,
-    selected_label,
     on_value_change,
   });
 
@@ -68,10 +66,39 @@ pub fn SelectGroup(#[prop(optional, into)] class: String, children: Children) ->
 pub fn SelectValue(#[prop(optional, into)] placeholder: String) -> impl IntoView {
   let context = use_context::<SelectContext>().expect("SelectValue must be used within Select");
 
+  // The label is read off the selected item, and it is read *here*, keyed by the
+  // value — not pushed in by whichever item happens to match. An item can only
+  // ever say "that's me"; nothing can say "none of us", so a value that no item
+  // carries (the empty one a picker resets to after acting, or a selection
+  // cleared when the list behind it changed) used to leave the trigger showing
+  // the label of a selection that no longer exists.
+  //
+  // The lookup goes through the DOM because the item's label is a view, not a
+  // string this component was handed. It runs in an effect, after the items are
+  // mounted.
+  let label = RwSignal::new(String::new());
+  Effect::new(move |_| {
+    let value = context.selected_value.get();
+    let text = if value.is_empty() {
+      String::new()
+    } else {
+      document()
+        .query_selector(&format!(
+          "[data-slot='select-item'][data-value='{}'] [data-slot='select-item-text']",
+          value
+        ))
+        .ok()
+        .flatten()
+        .and_then(|el| el.text_content())
+        .unwrap_or_default()
+    };
+    label.set(text);
+  });
+
   view! {
     <span data-slot="select-value">
       {move || {
-        let label = context.selected_label.get();
+        let label = label.get();
         if label.is_empty() { placeholder.clone() } else { label }
       }}
     </span>
@@ -414,23 +441,6 @@ pub fn SelectItem(
 
   let children_stored = StoredValue::new(children);
 
-  Effect::new({
-    let value = value.clone();
-    move |_| {
-      if context.selected_value.get() == value
-        && let Some(label_el) = document()
-          .query_selector(&format!(
-            "[data-slot='select-item'][data-value='{}'] [data-slot='select-item-text']",
-            value
-          ))
-          .ok()
-          .flatten()
-      {
-        context.selected_label.set(label_el.text_content().unwrap_or_default());
-      }
-    }
-  });
-
   view! {
     <div
       role="option"
@@ -599,7 +609,6 @@ fn side_as_str(side: OverlaySide) -> &'static str {
 struct SelectContext {
   is_open: RwSignal<bool>,
   selected_value: RwSignal<String>,
-  selected_label: RwSignal<String>,
   on_value_change: Option<Callback<String>>,
 }
 

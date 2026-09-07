@@ -381,6 +381,14 @@ follows [Keep a Changelog](https://keepachangelog.com/); this project uses
 
 ### Fixed
 
+- **A `Select`'s trigger stops showing a selection that is no longer there.**
+  The label was pushed in by whichever item matched the value; an item can only
+  ever say "that's me", and nothing could say "none of us" — so a value no item
+  carries (the empty one an action-picker resets to after acting, a selection
+  cleared because the list behind it changed) left the trigger showing the label
+  of a choice that had been undone. `SelectValue` now reads the label itself,
+  keyed by the value, and falls back to the placeholder when nothing matches.
+
 - **Hidden content is hidden from the keyboard too, everywhere.** An element
   that is merely `h-0 w-0 opacity-0` (or `h-0 overflow-hidden`) is invisible to
   the eye and fully present to Tab and to a screen reader — so the options of
