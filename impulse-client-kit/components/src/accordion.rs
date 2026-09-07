@@ -156,6 +156,10 @@ pub fn AccordionContent(#[prop(optional, into)] class: String, children: Childre
     <div
       data-slot="accordion-content"
       data-state=data_state
+      // See `CollapsibleContent`: what hides the content is what has to hide it
+      // from the keyboard, and `inert` does that without disturbing the
+      // collapse animation.
+      inert=move || !context.is_open.get()
       class="data-[state=closed]:h-0 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
       style=content_style
     >

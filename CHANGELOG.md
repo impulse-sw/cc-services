@@ -381,13 +381,21 @@ follows [Keep a Changelog](https://keepachangelog.com/); this project uses
 
 ### Fixed
 
-- **A closed `SelectContent` / `HoverCardContent` no longer holds a place in the
-  tab order.** Both stay mounted while closed — that is what keeps a select's
-  chosen label resolvable — and were hidden by collapsing them to
-  `h-0 w-0 opacity-0`, which hides an element from the eye but not from the
-  keyboard: Tab walked through the options of every closed select on the page,
-  and into whatever a hover card holds. Both now also go `invisible` while
-  closed, which takes them out of the tab order and changes nothing on screen.
+- **Hidden content is hidden from the keyboard too, everywhere.** An element
+  that is merely `h-0 w-0 opacity-0` (or `h-0 overflow-hidden`) is invisible to
+  the eye and fully present to Tab and to a screen reader — so the options of
+  every closed select were tab stops, and so was everything inside a collapsed
+  `Collapsible` or `Accordion`.
+
+  The rule the kit now follows, written down in the crate docs: whatever hides
+  content owns hiding it completely — nothing inside can know it is hidden, and
+  making each child opt out would push the problem onto every application built
+  on the kit. Overlays that stay mounted while closed (`SelectContent`,
+  `HoverCardContent`, `TooltipContent`, joining the dialogs, menus, popovers and
+  sheets that already did) go `invisible`; `CollapsibleContent` and
+  `AccordionContent`, whose content is still on screen while the collapse
+  animates, go `inert` instead — out of the tab order and the accessibility
+  tree, unchanged on screen.
 
 - **`SourceEditor`: the text starts where the placeholder says it will, and
   fenced code is no longer read as prose.** What stands in for the lines above

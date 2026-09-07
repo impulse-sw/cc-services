@@ -71,6 +71,14 @@ pub fn CollapsibleContent(#[prop(optional, into)] class: String, children: Child
     <div
       data-slot="collapsible-content"
       data-state=data_state
+      // Collapsed content is `h-0 overflow-hidden`: invisible to the eye, fully
+      // present to the keyboard. Nothing inside can know it is collapsed — the
+      // wrapper is the only element that does — so the wrapper takes the whole
+      // subtree out of the tab order and the accessibility tree with `inert`.
+      // `visibility: hidden` would do that too, but it would also blank the
+      // content instantly and leave the collapse animating an empty box; `inert`
+      // changes nothing on screen.
+      inert=move || !context.is_open.get()
       class="data-[state=closed]:h-0 data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden"
       style=content_style
     >

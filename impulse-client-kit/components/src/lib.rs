@@ -1,3 +1,29 @@
+//! Components for `impulse-client-kit`.
+//!
+//! ## Hiding content also hides it from the keyboard
+//!
+//! Whatever hides something owns hiding it completely. Nothing inside a
+//! collapsed section or a closed overlay can know it is hidden — only the
+//! wrapper knows — so the wrapper takes the whole subtree out of the tab order
+//! and the accessibility tree. Making each child opt out instead would push the
+//! problem onto every application built on the kit, which is how a spoiler ends
+//! up with Tab walking through rows nobody can see.
+//!
+//! Two mechanisms do that, and both cascade to descendants:
+//!
+//! * **`visibility: hidden`** (`data-[state=closed]:invisible`) — for an overlay
+//!   that is not on screen at all while closed but stays mounted: a select's
+//!   options have to remain in the DOM for the chosen one's label to be
+//!   resolvable, a dialog for its animation to have something to run on.
+//! * **`inert`** — for content that is *still drawn* while it goes away. A
+//!   collapsible and an accordion animate their height to zero, and blanking
+//!   the content at the first frame would leave an empty box shrinking; `inert`
+//!   changes nothing on screen and everything about interaction.
+//!
+//! `display: none` is neither: it cancels the animation and, in a collapsible,
+//! the height measurement the animation is built on. `pointer-events: none`
+//! only stops the mouse — the keyboard goes straight past it.
+
 #![deny(warnings)]
 #![recursion_limit = "256"]
 #![allow(clippy::extra_unused_lifetimes)]
