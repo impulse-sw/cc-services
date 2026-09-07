@@ -381,6 +381,22 @@ follows [Keep a Changelog](https://keepachangelog.com/); this project uses
 
 ### Fixed
 
+- **An overlay flips instead of covering its own trigger, and a hover card
+  stops flickering.** A trigger near the bottom of the screen got its overlay
+  clamped back into the viewport — on top of the trigger. For anything opened
+  by hover that is a loop with no way out: the card takes the pointer, the
+  trigger reports that it was left, the card closes, the trigger is uncovered
+  and opens it again, all with the cursor standing still.
+
+  `calculate_position` now flips to the opposite side when the requested one
+  has no room, and picks the roomier of the two when neither does.
+  `HoverCard` closes on leaving the *pair* — trigger and card — and asks a
+  `mouseleave` where the pointer actually is, rather than waiting for an enter
+  event a card that appeared under a still cursor may never receive. Its open
+  and close timers moved into the shared context on the way, so a card left
+  towards its trigger no longer closes on a timer only its own handler could
+  have cancelled.
+
 - **A `Select`'s trigger stops showing a selection that is no longer there.**
   The label was pushed in by whichever item matched the value; an item can only
   ever say "that's me", and nothing could say "none of us" — so a value no item

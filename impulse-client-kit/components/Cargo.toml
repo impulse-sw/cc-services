@@ -76,6 +76,9 @@ web-sys = { version = "0.3.82", features = [
   "HtmlElement",
   "HtmlTextAreaElement",
   "KeyboardEvent",
+  # `hover_card` asks a `mouseleave` where the pointer actually was, to tell
+  # leaving the trigger from moving onto the card it just opened.
+  "MouseEvent",
   "NodeList",
   # `dnd` times the press that turns into a touch drag on the monotonic clock.
   "Performance",

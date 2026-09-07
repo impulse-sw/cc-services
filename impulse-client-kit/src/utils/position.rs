@@ -22,8 +22,63 @@ pub enum OverlayAlign {
   End,
 }
 
+/// The side an overlay actually gets, given the room around the trigger.
+///
+/// The requested side when the content fits there; the opposite side when it
+/// fits and the requested one doesn't; otherwise whichever of the two has more
+/// room, so that the clamp below has the least to take back.
+///
+/// Flipping matters more than it looks: an overlay that doesn't fit used to be
+/// clamped into the viewport, which for a trigger near an edge put it *on top
+/// of its own trigger*. That takes the pointer off the trigger, and for
+/// anything driven by hover it is a loop — the overlay closes because the
+/// pointer "left" the trigger, which uncovers the trigger, which opens it
+/// again, with the pointer never moving.
+#[allow(clippy::too_many_arguments)]
+fn fitting_side(
+  side: OverlaySide,
+  trigger_top: f64,
+  trigger_left: f64,
+  trigger_width: f64,
+  trigger_height: f64,
+  content_width: f64,
+  content_height: f64,
+  offset: f64,
+  viewport_width: f64,
+  viewport_height: f64,
+) -> OverlaySide {
+  let room = |side: OverlaySide| match side {
+    OverlaySide::Top => trigger_top - offset - VIEWPORT_PADDING,
+    OverlaySide::Bottom => viewport_height - VIEWPORT_PADDING - (trigger_top + trigger_height + offset),
+    OverlaySide::Left => trigger_left - offset - VIEWPORT_PADDING,
+    OverlaySide::Right => viewport_width - VIEWPORT_PADDING - (trigger_left + trigger_width + offset),
+  };
+  let opposite = match side {
+    OverlaySide::Top => OverlaySide::Bottom,
+    OverlaySide::Bottom => OverlaySide::Top,
+    OverlaySide::Left => OverlaySide::Right,
+    OverlaySide::Right => OverlaySide::Left,
+  };
+  let needed = match side {
+    OverlaySide::Top | OverlaySide::Bottom => content_height,
+    OverlaySide::Left | OverlaySide::Right => content_width,
+  };
+
+  if room(side) >= needed || room(opposite) < room(side) {
+    side
+  } else {
+    opposite
+  }
+}
+
 /// Calculates overlay position based on given positions, side and align, then
 /// clamps the result so the overlay stays fully within the viewport.
+///
+/// The requested side is a preference, not a promise: an overlay that would not
+/// fit there is flipped to the opposite side (see [`fitting_side`]) rather than
+/// squeezed back over its own trigger. Only the position flips — a caller that
+/// keys an entrance animation or an arrow off the side it asked for still draws
+/// the side it asked for.
 #[allow(clippy::too_many_arguments)]
 pub fn calculate_position(
   trigger_top: f64,
@@ -39,6 +94,18 @@ pub fn calculate_position(
   viewport_height: f64,
 ) -> (f64, f64) {
   let offset = side_offset as f64;
+  let side = fitting_side(
+    side,
+    trigger_top,
+    trigger_left,
+    trigger_width,
+    trigger_height,
+    content_width,
+    content_height,
+    offset,
+    viewport_width,
+    viewport_height,
+  );
 
   let (mut top, mut left) = match side {
     OverlaySide::Top => (trigger_top - content_height - offset, trigger_left),
@@ -137,8 +204,11 @@ mod tests {
     assert_eq!(left, 1024.0 - 200.0 - VIEWPORT_PADDING);
   }
 
+  /// A trigger near the bottom edge: the content goes *above* it rather than
+  /// being clamped down onto it. Covering the trigger is what makes a hover
+  /// card flicker — it takes the pointer off the thing that opened it.
   #[test]
-  fn clamps_bottom_edge() {
+  fn flips_to_the_side_that_fits() {
     let (top, _) = calculate_position(
       700.0,
       100.0,
@@ -152,7 +222,48 @@ mod tests {
       1024.0,
       768.0,
     );
-    assert_eq!(top, 768.0 - 300.0 - VIEWPORT_PADDING);
+    assert_eq!(top, 700.0 - 300.0 - 4.0);
+  }
+
+  /// Neither side has room: the one with more of it wins, so the clamp has the
+  /// least to take back — and the overlap, if any, is as small as it can be.
+  #[test]
+  fn keeps_the_roomier_side_when_neither_fits() {
+    // 200 above the trigger, ~468 below it, content 600 tall: below stays.
+    let (top, _) = calculate_position(
+      200.0,
+      100.0,
+      30.0,
+      100.0,
+      100.0,
+      600.0,
+      OverlaySide::Top,
+      OverlayAlign::Start,
+      4,
+      1024.0,
+      768.0,
+    );
+    assert_eq!(top, 768.0 - 600.0 - VIEWPORT_PADDING);
+  }
+
+  /// A side that fits is never abandoned, even when the other side has more
+  /// room: the caller asked for this one.
+  #[test]
+  fn keeps_the_requested_side_when_it_fits() {
+    let (top, _) = calculate_position(
+      400.0,
+      100.0,
+      30.0,
+      20.0,
+      100.0,
+      100.0,
+      OverlaySide::Top,
+      OverlayAlign::Start,
+      4,
+      1024.0,
+      768.0,
+    );
+    assert_eq!(top, 400.0 - 100.0 - 4.0);
   }
 
   #[test]
