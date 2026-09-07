@@ -381,6 +381,14 @@ follows [Keep a Changelog](https://keepachangelog.com/); this project uses
 
 ### Fixed
 
+- **A closed `SelectContent` / `HoverCardContent` no longer holds a place in the
+  tab order.** Both stay mounted while closed — that is what keeps a select's
+  chosen label resolvable — and were hidden by collapsing them to
+  `h-0 w-0 opacity-0`, which hides an element from the eye but not from the
+  keyboard: Tab walked through the options of every closed select on the page,
+  and into whatever a hover card holds. Both now also go `invisible` while
+  closed, which takes them out of the tab order and changes nothing on screen.
+
 - **`SourceEditor`: the text starts where the placeholder says it will, and
   fenced code is no longer read as prose.** What stands in for the lines above
   the window is an inline `padding-top`, which overrules the `py-2` the content

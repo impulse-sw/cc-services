@@ -9,7 +9,10 @@ use impulse_client_kit::utils::cn;
 use impulse_client_kit::utils::{OverlayAlign, OverlaySide, calculate_position};
 use leptos::prelude::*;
 
-const BASE_CONTENT_CLASSES: &str = "bg-popover text-popover-foreground fixed z-50 w-64 rounded-md border p-4 shadow-md outline-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:h-0 data-[state=closed]:w-0 data-[state=closed]:overflow-hidden";
+// `invisible` while closed goes with the collapse below it: the card stays
+// mounted, and an element that is only `h-0 w-0 opacity-0` still holds its place
+// in the tab order — so Tab walked into links inside a card nobody had hovered.
+const BASE_CONTENT_CLASSES: &str = "bg-popover text-popover-foreground fixed z-50 w-64 rounded-md border p-4 shadow-md outline-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:invisible data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:h-0 data-[state=closed]:w-0 data-[state=closed]:overflow-hidden";
 
 #[component]
 pub fn HoverCard(
