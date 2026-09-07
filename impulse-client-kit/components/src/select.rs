@@ -336,11 +336,6 @@ pub fn SelectContent(
       data-side=side_as_str(side)
       class=cn(
         &[
-          // `invisible` while closed, on top of the collapse: the options stay
-          // mounted (that is what resolves the selected one's label), and an
-          // element that is merely `h-0 w-0 opacity-0` is still focusable, so
-          // Tab used to walk through a list nobody can see. `visibility: hidden`
-          // takes them out of the tab order and changes nothing on screen.
           "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border shadow-md data-[state=closed]:invisible data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:h-0 data-[state=closed]:w-0 data-[state=closed]:overflow-hidden",
           slide_class,
           popper_class,

@@ -136,9 +136,6 @@ pub fn TooltipContent(
       role="tooltip"
       class=cn(
         &[
-          // `invisible` while closed, like every other overlay in the kit: a
-          // tooltip that is only `h-0 w-0 opacity-0` is still read out by a
-          // screen reader and still holds whatever it contains in the tab order.
           "fixed z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:invisible data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:h-0 data-[state=closed]:w-0 data-[state=closed]:overflow-hidden",
           slide_class,
           class.read_value().as_str(),
